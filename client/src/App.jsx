@@ -6,6 +6,8 @@ import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import TripDetailsPage from './components/Trips/TripDetails';
+import DashboardPage from './pages/Dashboard';
 
 const App = () => {
   return (
@@ -36,6 +38,24 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path='/trip/:tripId'
+          element={
+            <ProtectedRoute>
+              <TripDetailsPage />
             </ProtectedRoute>
           }
         />

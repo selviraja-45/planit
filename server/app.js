@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js"
+import tripRoutes from "./routes/tripRoutes.js"
 
 // Load environment variables from .env
 dotenv.config();
@@ -11,13 +12,16 @@ dotenv.config();
 const app = express();
 
 // Enable cors
-app.use(cors())
+app.use(cors());
 
 // Middleware to parse JSON request bodies
 app.use(express.json()); 
 
-// Routes
+// Authentication Routes
 app.use('/api/auth', authRoutes);
+
+// Routes
+app.use('/api/trips', tripRoutes);
 
 // Root route, can be used for testing if the server is up
 app.get('/', (req, res) => res.status(200).json({

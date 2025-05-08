@@ -16,7 +16,7 @@ const LoginPage = () => {
 
       localStorage.setItem('planit-token', res.data.token);
 
-      navigate('/profile');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {

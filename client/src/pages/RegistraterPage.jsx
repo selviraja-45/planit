@@ -16,7 +16,7 @@ const RegisterPage = () => {
       const res = await API.post('/auth/register', data);
       
       localStorage.setItem('planit-token', res.data.token);
-      navigate('/profile');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {

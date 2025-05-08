@@ -4,7 +4,7 @@ import useAuth from '../hooks/useAuth';
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? <Navigate to="/profile" /> : children;
+  return isAuthenticated ? <Navigate to="/dashboard" /> : children;
 };
 
 export default PublicRoute;
