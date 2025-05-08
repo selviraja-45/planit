@@ -1,34 +1,47 @@
-import { useState, useEffect } from 'react';
-import { Button, Container, Navbar } from 'react-bootstrap'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import RegisterPage from './pages/RegistraterPage';
+import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
+import ProtectedRoute from './routes/ProtectedRoute';
+import PublicRoute from './routes/PublicRoute';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
-  const [response, setResponse] = useState("");
-
-  useEffect(() => {
-    fetch("http://localhost:5000/")
-      .then((res) => res.json())
-      .then((data) => setResponse(data.message)) 
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
-
+const App = () => {
   return (
-    <div>
-      <Navbar bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand>My App</Navbar.Brand>
-        </Container>
-      </Navbar>
-      <Container className="mt-4">
-        <h1>Welcome to My App</h1>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
 
-        <p>
-          {response}
-        </p>
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
 
-        <Button variant="primary">Click Me</Button>
-      </Container>
-    </div>
-  )
-}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;

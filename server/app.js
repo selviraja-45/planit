@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import cors from "cors";
+import authRoutes from "./routes/authRoutes.js"
 
 // Load environment variables from .env
 dotenv.config();
@@ -15,9 +16,12 @@ app.use(cors())
 // Middleware to parse JSON request bodies
 app.use(express.json()); 
 
+// Routes
+app.use('/api/auth', authRoutes);
+
 // Root route, can be used for testing if the server is up
-app.use('/', (req, res) => res.status(200).json({
-    message: "Response from --- Server..!",
+app.get('/', (req, res) => res.status(200).json({
+    message: "Response from Planit Server..!",
     path: "/"
 }));
 
