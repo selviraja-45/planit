@@ -14,6 +14,8 @@ function TripDetailsPage() {
 
   const navigate = useNavigate();
 
+  console.log("Trip ID from URL:", tripId); // Check this appears
+
   useEffect(() => {
     if (!user) {
       navigate('/login');

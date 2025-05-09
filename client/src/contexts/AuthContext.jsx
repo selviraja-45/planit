@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('planit-token');
     if (token) {
-      API.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+      API.get('/auth/user', { headers: { Authorization: `Bearer ${token}` } })
         .then((res) => {
           setUser(res.data);
         })
