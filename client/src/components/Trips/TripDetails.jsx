@@ -3,18 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import API from '../../api';
 import ActivityList from '../Activities/ActivityList';
-import { useAuth } from '../../contexts/AuthContext'; // Import useAuth to access user
+import { useAuth } from '../../contexts/AuthContext';
 
 function TripDetailsPage() {
   const { tripId } = useParams();
-  const { user } = useAuth(); // Get the user from the AuthContext
+  const { user } = useAuth();
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
   const navigate = useNavigate();
-
-  console.log("Trip ID from URL:", tripId); // Check this appears
 
   useEffect(() => {
     if (!user) {
@@ -22,26 +19,6 @@ function TripDetailsPage() {
     }
   }, [user, navigate]);
 
-  const convertToDate = (dateInput) => {
-    if (!dateInput) return null;
-  
-    if (dateInput instanceof Date) {
-      return isNaN(dateInput.getTime()) ? null : dateInput;
-    }
-  
-    if (typeof dateInput === 'string' || typeof dateInput === 'number') {
-      const date = new Date(dateInput);
-      return isNaN(date.getTime()) ? null : date;
-    }
-  
-    if (typeof dateInput === 'object' && dateInput.$date) {
-      const date = new Date(dateInput.$date);
-      return isNaN(date.getTime()) ? null : date;
-    }
-  
-    return null; // fallback
-  };  
-  
   useEffect(() => {
     const fetchTrip = async () => {
       try {
@@ -49,23 +26,10 @@ function TripDetailsPage() {
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
 
-        console.log("Data: ", data);
+        // Convert to Date objects safely
+        data.startDate = new Date(data.startDate);
+        data.endDate = new Date(data.endDate);
 
-        // Convert startDate and endDate to valid Date objects
-        if (data.startDate) {
-          data.startDate = convertToDate(data.startDate);
-        }
-  
-        if (data.endDate) {
-          data.endDate = convertToDate(data.endDate);
-        }
-  
-        console.log("Raw startDate:", data.startDate);
-        console.log("Raw endDate:", data.endDate);
-        
-        console.log("Converted startDate:", convertToDate(data.startDate));
-        console.log("Converted endDate:", convertToDate(data.endDate));
-  
         setTrip(data);
       } catch (err) {
         console.error('Trip fetch failed:', err);
@@ -74,9 +38,13 @@ function TripDetailsPage() {
         setLoading(false);
       }
     };
-  
+
     fetchTrip();
-  }, [tripId]);  
+  }, [tripId]);
+
+  const formatDate = (date) => {
+    return date instanceof Date && !isNaN(date) ? date.toISOString().slice(0, 10) : 'N/A';
+  };
 
   return (
     <Container className="mt-4">
@@ -87,15 +55,12 @@ function TripDetailsPage() {
       ) : trip ? (
         <>
           <h2>{trip.name}</h2>
-          <p><strong>Dates:</strong> 
-            {trip.startDate ? trip.startDate.toISOString().slice(0, 10) : 'N/A'} 
-            to 
-            {trip.endDate ? trip.endDate.toISOString().slice(0, 10) : 'N/A'}
-          </p>  
+          <p>
+            <strong>Dates:</strong> {formatDatetrip.startDate} to {formatDatetrip.endDate}
+          </p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
 
-          {/* Pass user._id to ActivityList */}
           <ActivityList tripId={tripId} userId={user?._id} />
         </>
       ) : (
