@@ -4,6 +4,7 @@ import connectDB from './config/db.js';
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js"
 import tripRoutes from "./routes/tripRoutes.js"
+import activityRoutes from "./routes/activityRoutes.js"
 
 // Load environment variables from .env
 dotenv.config();
@@ -30,8 +31,11 @@ app.use(express.json());
 // Authentication Routes
 app.use('/api/auth', authRoutes);
 
-// Routes
+// Trip Routes
 app.use('/api/trips', tripRoutes);
+
+// Activity Routes
+app.use('/api/activities', activityRoutes);
 
 // Root route, can be used for testing if the server is up
 app.get('/', (req, res) => res.status(200).json({

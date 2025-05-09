@@ -8,6 +8,7 @@ import {
     joinTripWithCode
 } from '../controllers/tripController.js';
 import { protect } from '../middleware/authMiddleware.js';
+import { addActivity, getActivities } from '../controllers/activityController.js';
 
 const router = express.Router();
 
@@ -42,5 +43,9 @@ router.delete('/:tripId', protect, deleteTrip);
 router.post('/:tripId/invite', protect, inviteUserToTrip);
 
 router.post('/join/:tripCode', protect, joinTripWithCode);
+
+router.post('/:tripId/activities', protect, addActivity);
+
+router.get('/:tripId/activities', protect, getActivities);
 
 export default router;

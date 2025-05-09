@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import API from '../../api'; 
+import ActivityList from '../Activities/ActivityList';
 
 function TripDetailsPage() {
   const { tripId } = useParams();
@@ -39,7 +40,9 @@ function TripDetailsPage() {
           <p><strong>Dates:</strong> {trip.startDate?.slice(0, 10)} to {trip.endDate?.slice(0, 10)}</p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
+
           {/* Activities and other sections go here */}
+          <ActivityList tripId={tripId} userId={user?._id} />
         </>
       )}
     </Container>
