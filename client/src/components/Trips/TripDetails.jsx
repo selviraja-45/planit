@@ -22,7 +22,6 @@ function TripDetailsPage() {
     }
   }, [user, navigate]);
 
-
   useEffect(() => {
     const fetchTrip = async () => {
       try {
@@ -56,16 +55,22 @@ function TripDetailsPage() {
         <Spinner animation="border" />
       ) : error ? (
         <Alert variant="danger">{error}</Alert>
-      ) : (
+      ) : trip ? (
         <>
           <h2>{trip.name}</h2>
-          <p><strong>Dates:</strong> {trip.startDate?.slice(0, 10)} to {trip.endDate?.slice(0, 10)}</p>
+          <p><strong>Dates:</strong> 
+            {trip.startDate ? trip.startDate.toISOString().slice(0, 10) : 'N/A'} 
+            to 
+            {trip.endDate ? trip.endDate.toISOString().slice(0, 10) : 'N/A'}
+          </p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
 
           {/* Pass user._id to ActivityList */}
           <ActivityList tripId={tripId} userId={user?._id} />
         </>
+      ) : (
+        <Alert variant="info">No trip details available.</Alert>
       )}
     </Container>
   );
