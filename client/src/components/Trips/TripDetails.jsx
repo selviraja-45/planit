@@ -30,7 +30,8 @@ function TripDetailsPage() {
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
 
-        console.log("Data: ", data);
+        console.log("data: ", data.startDate);
+        console.log("data: ", data.startDate);
 
         // Convert to Date objects safely
         data.startDate = new Date(data.startDate);
