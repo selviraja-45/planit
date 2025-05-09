@@ -56,8 +56,8 @@ export const getTripById = async (req, res) => {
     console.log("Trip Id: ", req.params.tripId);
     
     const trip = await Trip.findById(req.params.tripId)
-      // .populate('activities')
-      // .populate('participants', 'name email');
+      .populate('activities')
+      .populate('participants', 'name email');
 
     console.log("Trip: ", trip);
     
