@@ -24,6 +24,8 @@ function LogoutButton() {
 
 function DashboardPage() {
   const [trips, setTrips] = useState([]);
+  const [createdTrips, setCreatedTrips] = useState([]);
+  const [invitedTrips, setInvitedTrips] = useState([]);  
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -36,13 +38,16 @@ function DashboardPage() {
     try {
       setLoading(true);
       const { data } = await API.get('/trips', { withCredentials: true });
-      setTrips([...data.createdTrips, ...data.invitedTrips]);
+      setCreatedTrips(data.createdTrips || []);
+      setInvitedTrips(data.invitedTrips || []);
+      setTrips([...(data.createdTrips || []), ...(data.invitedTrips || [])]);
     } catch (err) {
       console.error('Error fetching trips:', err);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchTrips();
@@ -66,9 +71,8 @@ function DashboardPage() {
           <Button
             variant="warning"
             onClick={() => {
-              const ownTrips = trips.filter(trip => trip.isCreator); // assume flag from backend
-              if (ownTrips.length > 0) {
-                setSelectedTripId(ownTrips[0]._id); // or open a select modal if needed
+              if (createdTrips.length > 0) {
+                setSelectedTripId(createdTrips[0]._id); // or allow user to choose
                 setShowInviteModal(true);
               } else {
                 alert("You need to create a trip first.");
