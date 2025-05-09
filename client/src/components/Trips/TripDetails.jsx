@@ -49,6 +49,9 @@ function TripDetailsPage() {
             throw new Error("Invalid endDate");
           }
         }
+
+        console.log("startDate:", data.startDate);
+        console.log("endDate:", data.endDate);
         
         setTrip(data);
       } catch (err) {
@@ -61,10 +64,6 @@ function TripDetailsPage() {
   
     fetchTrip();
   }, [tripId]);  
-
-  console.log("startDate:", data.startDate);
-  console.log("endDate:", data.endDate);
-
 
   return (
     <Container className="mt-4">
