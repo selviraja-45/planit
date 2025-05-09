@@ -29,6 +29,15 @@ function TripDetailsPage() {
         setError('');
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
+        
+        // Convert MongoDB date format to JavaScript Date
+        if (data.startDate) {
+          data.startDate = new Date(data.startDate.$date);
+        }
+        if (data.endDate) {
+          data.endDate = new Date(data.endDate.$date);
+        }
+        
         setTrip(data);
       } catch (err) {
         console.error('Trip fetch failed:', err);
@@ -37,9 +46,9 @@ function TripDetailsPage() {
         setLoading(false);
       }
     };
-
+  
     fetchTrip();
-  }, [tripId]);
+  }, [tripId]);  
 
   return (
     <Container className="mt-4">
