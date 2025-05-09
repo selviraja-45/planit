@@ -99,3 +99,59 @@ export const deleteTrip = async (req, res) => {
     res.status(500).json({ error: 'Error deleting trip' });
   }
 };
+
+// Invite by Email
+export const inviteUserToTrip = async (req, res) => {
+  const { tripId } = req.params;
+  const { email } = req.body;
+
+  try {
+    const trip = await Trip.findById(tripId);
+    if (!trip) return res.status(404).json({ message: 'Trip not found' });
+
+    const userToInvite = await User.findOne({ email });
+    if (!userToInvite) return res.status(404).json({ message: 'User not found with that email' });
+
+    if (trip.participants.includes(userToInvite._id)) {
+      return res.status(400).json({ message: 'User already a participant' });
+    }
+
+    trip.participants.push(userToInvite._id);
+    await trip.save();
+
+    userToInvite.tripsInvited.push(trip._id);
+    await userToInvite.save();
+
+    res.status(200).json({ message: 'User invited successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while inviting user' });
+  }
+};
+
+// Join with Trip Code
+export const joinTripWithCode = async (req, res) => {
+  const { tripCode } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const trip = await Trip.findOne({ tripCode });
+    if (!trip) return res.status(404).json({ message: 'Trip not found with provided code' });
+
+    if (trip.participants.includes(userId)) {
+      return res.status(400).json({ message: 'You are already part of this trip' });
+    }
+
+    trip.participants.push(userId);
+    await trip.save();
+
+    const user = await User.findById(userId);
+    user.tripsInvited.push(trip._id);
+    await user.save();
+
+    res.status(200).json({ message: 'Successfully joined trip!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while joining trip' });
+  }
+};

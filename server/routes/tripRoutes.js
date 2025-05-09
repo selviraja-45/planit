@@ -3,7 +3,9 @@ import {
     createTrip,
     getUserTrips,
     getTripById,
-    deleteTrip
+    deleteTrip,
+    inviteUserToTrip,
+    joinTripWithCode
 } from '../controllers/tripController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -36,5 +38,9 @@ router.get('/:tripId', protect, getTripById);
  * @access  Private
  */
 router.delete('/:tripId', protect, deleteTrip);
+
+router.post('/:tripId/invite', protect, inviteUserToTrip);
+
+router.post('/join/:tripCode', protect, joinTripWithCode);
 
 export default router;
