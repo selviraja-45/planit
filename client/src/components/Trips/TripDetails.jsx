@@ -25,6 +25,10 @@ function TripDetailsPage() {
   const convertToDate = (dateInput) => {
     if (!dateInput) return null;
   
+    if (dateInput instanceof Date) {
+      return isNaN(dateInput.getTime()) ? null : dateInput;
+    }
+  
     if (typeof dateInput === 'string' || typeof dateInput === 'number') {
       const date = new Date(dateInput);
       return isNaN(date.getTime()) ? null : date;
@@ -87,7 +91,7 @@ function TripDetailsPage() {
             {trip.startDate ? trip.startDate.toISOString().slice(0, 10) : 'N/A'} 
             to 
             {trip.endDate ? trip.endDate.toISOString().slice(0, 10) : 'N/A'}
-          </p>
+          </p>  
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
 
