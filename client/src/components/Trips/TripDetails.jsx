@@ -45,7 +45,6 @@ function TripDetailsPage() {
         }
 
         console.log("sTART AND END DATES ARE VALID...");
-        
   
         setTrip(data);
       } catch (err) {
