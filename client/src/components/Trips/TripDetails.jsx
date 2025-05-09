@@ -52,7 +52,7 @@ function TripDetailsPage() {
         <>
           <h2>{trip.name}</h2>
           <p>
-            <strong>Dates:</strong> {trip.startDate.toLocaleDateString()} to {trip.endDate.toLocaleDateString()}
+            {/* <strong>Dates:</strong> {trip.startDate.toLocaleDateString()} to {trip.endDate.toLocaleDateString()} */}
           </p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
