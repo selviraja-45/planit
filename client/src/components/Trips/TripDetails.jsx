@@ -30,17 +30,30 @@ function TripDetailsPage() {
         const { data } = await API.get(`/trips/${tripId}`);
         
         // Convert MongoDB date format to JavaScript Date
-        if (data.startDate) {
-          data.startDate = new Date(data.startDate.$date);
+        if (data.startDate && data.startDate.$date) {
+          const startDate = new Date(data.startDate.$date);
+          // Check if startDate is a valid date
+          if (!isNaN(startDate.getTime())) {
+            data.startDate = startDate;
+          } else {
+            throw new Error("Invalid startDate");
+          }
         }
-        if (data.endDate) {
-          data.endDate = new Date(data.endDate.$date);
+
+        if (data.endDate && data.endDate.$date) {
+          const endDate = new Date(data.endDate.$date);
+          // Check if endDate is a valid date
+          if (!isNaN(endDate.getTime())) {
+            data.endDate = endDate;
+          } else {
+            throw new Error("Invalid endDate");
+          }
         }
         
         setTrip(data);
       } catch (err) {
         console.error('Trip fetch failed:', err);
-        setError(err?.response?.data?.message || 'Could not load trip details');
+        setError(err?.message || 'Could not load trip details');
       } finally {
         setLoading(false);
       }
@@ -48,6 +61,10 @@ function TripDetailsPage() {
   
     fetchTrip();
   }, [tripId]);  
+
+  console.log("startDate:", data.startDate);
+  console.log("endDate:", data.endDate);
+
 
   return (
     <Container className="mt-4">
