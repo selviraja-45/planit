@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import API from '../../api'; // Adjust path based on your file structure
 
 function TripFormModal({ show, handleClose, onTripCreated }) {
   const [name, setName] = useState('');
@@ -10,20 +11,24 @@ function TripFormModal({ show, handleClose, onTripCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/trips', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, startDate, endDate, budget }),
-        credentials: 'include',
+      const { data } = await API.post('/trips', {
+        name,
+        startDate,
+        endDate,
+        budget,
       });
 
-      if (!response.ok) throw new Error('Failed to create trip');
+      console.log("Data from Trip creation modal: ", data);
 
-      const data = await response.json();
       onTripCreated(data); // Refresh trip list
+
+      console.log("Passed onTripCreated");
+
       handleClose(); // Close modal
+
+      console.log("Passed modal close");
     } catch (err) {
-      alert(err.message);
+      alert(err.response?.data?.message || 'Failed to create trip');
     }
   };
 
@@ -36,19 +41,37 @@ function TripFormModal({ show, handleClose, onTripCreated }) {
         <Modal.Body>
           <Form.Group>
             <Form.Label>Trip Name</Form.Label>
-            <Form.Control value={name} onChange={e => setName(e.target.value)} required />
+            <Form.Control
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+            />
           </Form.Group>
           <Form.Group className="mt-2">
             <Form.Label>Start Date</Form.Label>
-            <Form.Control type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required />
+            <Form.Control
+              type="date"
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
+              required
+            />
           </Form.Group>
           <Form.Group className="mt-2">
             <Form.Label>End Date</Form.Label>
-            <Form.Control type="date" value={endDate} onChange={e => setEndDate(e.target.value)} required />
+            <Form.Control
+              type="date"
+              value={endDate}
+              onChange={e => setEndDate(e.target.value)}
+              required
+            />
           </Form.Group>
           <Form.Group className="mt-2">
             <Form.Label>Budget</Form.Label>
-            <Form.Control type="number" value={budget} onChange={e => setBudget(e.target.value)} />
+            <Form.Control
+              type="number"
+              value={budget}
+              onChange={e => setBudget(e.target.value)}
+            />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
