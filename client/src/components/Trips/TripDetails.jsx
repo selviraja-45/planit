@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import API from '../../api';
 import ActivityList from '../Activities/ActivityList';
-import { useAuth } from '../../context/AuthContext'; // Import useAuth to access user
+import { useAuth } from '../../contexts/AuthContext'; // Import useAuth to access user
 
 function TripDetailsPage() {
   const { tripId } = useParams();
@@ -11,13 +11,15 @@ function TripDetailsPage() {
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const history = useHistory();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      history.push('/login'); // Redirect to login page if no user is logged in
+      navigate('/login');
     }
-  }, [user, history]);
+  }, [user, navigate]);
+
 
   useEffect(() => {
     const fetchTrip = async () => {

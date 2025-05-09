@@ -6,7 +6,7 @@ import TripFormModal from '../components/Trips/TripFormModal';
 import TripInviteForm from '../components/Trips/TripInviteForm';
 import JoinTripForm from '../components/Trips/JoinTripForm';
 import API from '../api';
-import { useAuth } from '../contexts/AuthContext'; // ✅ Import useAuth
+import { useAuth } from '../contexts/AuthContext'; // Import useAuth
 
 function DashboardPage() {
   const [trips, setTrips] = useState([]);
