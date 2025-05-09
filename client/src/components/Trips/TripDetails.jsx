@@ -28,7 +28,7 @@ function TripDetailsPage() {
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
 
-        console.log("Data: ", data);
+        console.log("Data: ", data.endDate);
         
   
         // Check if startDate and endDate are valid before converting to Date objects
@@ -43,6 +43,9 @@ function TripDetailsPage() {
         } else {
           throw new Error('Invalid end date');
         }
+
+        console.log("sTART AND END DATES ARE VALID...");
+        
   
         setTrip(data);
       } catch (err) {
