@@ -1,9 +1,11 @@
+// pages/TripDetailsPage.js
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import API from '../../api';
 import ActivityList from '../Activities/ActivityList';
 import { useAuth } from '../../contexts/AuthContext';
+import TripList from '../Trips/TripList'; // ✅ Import TripList
 
 function TripDetailsPage() {
   const { tripId } = useParams();
@@ -25,11 +27,8 @@ function TripDetailsPage() {
         setError('');
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
-
-        // Convert to Date objects safely
         data.startDate = new Date(data.startDate);
         data.endDate = new Date(data.endDate);
-
         setTrip(data);
       } catch (err) {
         console.error('Trip fetch failed:', err);
@@ -51,17 +50,22 @@ function TripDetailsPage() {
       ) : trip ? (
         <>
           <h2>{trip.name}</h2>
-          <p>
-            {/* <strong>Dates:</strong> {trip.startDate.toLocaleDateString()} to {trip.endDate.toLocaleDateString()} */}
-          </p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
-
           <ActivityList tripId={tripId} userId={user?._id} />
         </>
       ) : (
         <Alert variant="info">No trip details available.</Alert>
       )}
+
+      {/* Trip List (for user’s other trips) */}
+      <h4 className="mt-4">Other Trips</h4>
+      <TripList
+        trips={[trip]} // Only the current trip
+        loading={loading}
+        onTripClick={(tripId) => navigate(`/trip/${tripId}`)}
+        error={error}
+      />
     </Container>
   );
 }

@@ -1,12 +1,14 @@
+// pages/DashboardPage.js
 import { useEffect, useState } from 'react';
-import { Button, Container, ListGroup, Spinner, Row, Col, Modal } from 'react-bootstrap';
+import { Button, Container, Row, Col, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import TripFormModal from '../components/Trips/TripFormModal';
 import TripInviteForm from '../components/Trips/TripInviteForm';
 import JoinTripForm from '../components/Trips/JoinTripForm';
 import API from '../api';
-import { useAuth } from '../contexts/AuthContext'; // Import useAuth
+import { useAuth } from '../contexts/AuthContext';
+import TripList from '../components/Trips/TripList';  // ✅ Import TripList
 
 function DashboardPage() {
   const [trips, setTrips] = useState([]);
@@ -19,7 +21,7 @@ function DashboardPage() {
   const [selectedTripId, setSelectedTripId] = useState(null);
 
   const navigate = useNavigate();
-  const { logout } = useAuth(); // ✅ Get logout from AuthContext
+  const { logout } = useAuth();
 
   const fetchTrips = async () => {
     try {
@@ -47,7 +49,7 @@ function DashboardPage() {
     <Container className="mt-4">
       <div className="d-flex align-items-center justify-content-between mb-3">
         <p className="mb-0">Welcome to Your Dashboard</p>
-        <Button variant="outline-danger" onClick={logout}>Logout</Button> {/* ✅ Replaced manual logic */}
+        <Button variant="outline-danger" onClick={logout}>Logout</Button>
       </div>
 
       <Row className="my-3">
@@ -101,20 +103,13 @@ function DashboardPage() {
         </Modal.Body>
       </Modal>
 
-      <h4 className="mt-4">Your Trips</h4>
-      {loading ? (
-        <Spinner animation="border" />
-      ) : trips.length === 0 ? (
-        <p>You have no trips.</p>
-      ) : (
-        <ListGroup>
-          {trips.map(trip => (
-            <ListGroup.Item key={trip._id} onClick={() => handleTripClick(trip._id)} action>
-              {trip.name} ({trip.startDate?.slice(0, 10)} → {trip.endDate?.slice(0, 10)})
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-      )}
+      {/* Trip List */}
+      <TripList
+        trips={trips}
+        loading={loading}
+        onTripClick={handleTripClick}
+        error={loading ? '' : 'Failed to load trips'}
+      />
     </Container>
   );
 }
