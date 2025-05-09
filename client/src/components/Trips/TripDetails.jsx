@@ -46,7 +46,11 @@ function TripDetailsPage() {
 
         console.log("sTART AND END DATES ARE VALID...");
   
-        setTrip(data);
+        setTrip({
+          ...data,
+          startDate: data.startDate && !isNaN(new Date(data.startDate)) ? new Date(data.startDate) : null,
+          endDate: data.endDate && !isNaN(new Date(data.endDate)) ? new Date(data.endDate) : null
+        });        
       } catch (err) {
         console.error('Trip fetch failed:', err);
         setError(err?.message || 'Could not load trip details');

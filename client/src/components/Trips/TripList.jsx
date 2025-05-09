@@ -20,7 +20,11 @@ const TripList = ({ trips, loading, onTripClick, error }) => {
                 <Card.Body>
                   <Card.Title>{trip.name}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
-                    {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
+                    {trip.startDate && !isNaN(new Date(trip.startDate)) && trip.endDate && !isNaN(new Date(trip.endDate)) ? (
+                      `${new Date(trip.startDate).toLocaleDateString()} - ${new Date(trip.endDate).toLocaleDateString()}`
+                    ) : (
+                      'Dates not available'
+                    )}
                   </Card.Subtitle>
                   {trip.budget && <Card.Text>Budget: ₹{trip.budget}</Card.Text>}
                   <Button variant="info" onClick={() => onTripClick(trip._id)}>View Details</Button>
