@@ -16,7 +16,10 @@ function DashboardPage() {
       
       const { data } = await API.get('/trips', { withCredentials: true });
 
-      setTrips(data);
+      console.log("Data: ", data);
+      
+
+      setTrips([...data.createdTrips, ...data.invitedTrips]);
     } catch (err) {
       console.error('Error fetching trips:', err);
     } finally {
