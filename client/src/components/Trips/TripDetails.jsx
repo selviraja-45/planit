@@ -13,6 +13,10 @@ function TripDetailsPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const formatDate = (date) => {
+    return date instanceof Date && !isNaN(date) ? date.toISOString().slice(0, 10) : 'N/A';
+  };
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -26,9 +30,17 @@ function TripDetailsPage() {
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
 
+        console.log("Data: ", data);
+
         // Convert to Date objects safely
         data.startDate = new Date(data.startDate);
         data.endDate = new Date(data.endDate);
+
+        console.log("Start date: ", startDate);
+        console.log("End date: ", endDate);
+
+        console.log("Formatted start date: ", formatDate(startDate));
+        console.log("Formatted end date: ", formatDate(endDate));
 
         setTrip(data);
       } catch (err) {
@@ -42,10 +54,6 @@ function TripDetailsPage() {
     fetchTrip();
   }, [tripId]);
 
-  const formatDate = (date) => {
-    return date instanceof Date && !isNaN(date) ? date.toISOString().slice(0, 10) : 'N/A';
-  };
-
   return (
     <Container className="mt-4">
       {loading ? (
@@ -56,7 +64,7 @@ function TripDetailsPage() {
         <>
           <h2>{trip.name}</h2>
           <p>
-            <strong>Dates:</strong> {formatDate(trip.startDate)} to {formatDate(trip.endDate)}
+            {/* <strong>Dates:</strong> {formatDate(trip.startDate)} to {formatDate(trip.endDate)} */}
           </p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
