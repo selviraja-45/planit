@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Container, Spinner, Alert } from 'react-bootstrap';
-import API from '../../api'; 
+import API from '../../api';
 import ActivityList from '../Activities/ActivityList';
+import { useAuth } from '../../context/AuthContext'; // Import useAuth to access user
 
 function TripDetailsPage() {
   const { tripId } = useParams();
+  const { user } = useAuth(); // Get the user from the AuthContext
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!user) {
+      history.push('/login'); // Redirect to login page if no user is logged in
+    }
+  }, [user, history]);
 
   useEffect(() => {
     const fetchTrip = async () => {
@@ -41,7 +50,7 @@ function TripDetailsPage() {
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
 
-          {/* Activities and other sections go here */}
+          {/* Pass user._id to ActivityList */}
           <ActivityList tripId={tripId} userId={user?._id} />
         </>
       )}

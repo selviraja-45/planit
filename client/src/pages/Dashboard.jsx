@@ -6,21 +6,7 @@ import TripFormModal from '../components/Trips/TripFormModal';
 import TripInviteForm from '../components/Trips/TripInviteForm';
 import JoinTripForm from '../components/Trips/JoinTripForm';
 import API from '../api';
-
-function LogoutButton() {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem('planit-token');
-    navigate('/login');
-  };
-
-  return (
-    <Button variant="outline-danger" onClick={handleLogout} className="ms-auto">
-      Logout
-    </Button>
-  );
-}
+import { useAuth } from '../contexts/AuthContext'; // ✅ Import useAuth
 
 function DashboardPage() {
   const [trips, setTrips] = useState([]);
@@ -33,6 +19,7 @@ function DashboardPage() {
   const [selectedTripId, setSelectedTripId] = useState(null);
 
   const navigate = useNavigate();
+  const { logout } = useAuth(); // ✅ Get logout from AuthContext
 
   const fetchTrips = async () => {
     try {
@@ -47,7 +34,6 @@ function DashboardPage() {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchTrips();
@@ -59,7 +45,11 @@ function DashboardPage() {
 
   return (
     <Container className="mt-4">
-      <p>Welcome to Your Dashboard</p>
+      <div className="d-flex align-items-center justify-content-between mb-3">
+        <p className="mb-0">Welcome to Your Dashboard</p>
+        <Button variant="outline-danger" onClick={logout}>Logout</Button> {/* ✅ Replaced manual logic */}
+      </div>
+
       <Row className="my-3">
         <Col>
           <Button variant="primary" onClick={() => setShowCreateModal(true)}>Create Trip</Button>
@@ -72,7 +62,7 @@ function DashboardPage() {
             variant="warning"
             onClick={() => {
               if (createdTrips.length > 0) {
-                setSelectedTripId(createdTrips[0]._id); // or allow user to choose
+                setSelectedTripId(createdTrips[0]._id);
                 setShowInviteModal(true);
               } else {
                 alert("You need to create a trip first.");
