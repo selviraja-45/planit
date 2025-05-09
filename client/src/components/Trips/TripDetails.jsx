@@ -30,29 +30,22 @@ function TripDetailsPage() {
         const { data } = await API.get(`/trips/${tripId}`);
         
         // Convert MongoDB date format to JavaScript Date
-        if (data.startDate && data.startDate.$date) {
-          const startDate = new Date(data.startDate.$date);
-          // Check if startDate is a valid date
-          if (!isNaN(startDate.getTime())) {
-            data.startDate = startDate;
-          } else {
-            throw new Error("Invalid startDate");
-          }
+        const convertToDate = (dateObj) => {
+          const date = new Date(dateObj?.$date);
+          return isNaN(date.getTime()) ? null : date; // If invalid, return null
+        };
+
+        if (data.startDate) {
+          data.startDate = convertToDate(data.startDate);
         }
 
-        if (data.endDate && data.endDate.$date) {
-          const endDate = new Date(data.endDate.$date);
-          // Check if endDate is a valid date
-          if (!isNaN(endDate.getTime())) {
-            data.endDate = endDate;
-          } else {
-            throw new Error("Invalid endDate");
-          }
+        if (data.endDate) {
+          data.endDate = convertToDate(data.endDate);
         }
 
         console.log("startDate:", data.startDate);
         console.log("endDate:", data.endDate);
-        
+
         setTrip(data);
       } catch (err) {
         console.error('Trip fetch failed:', err);
