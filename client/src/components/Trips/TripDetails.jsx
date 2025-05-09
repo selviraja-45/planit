@@ -30,18 +30,9 @@ function TripDetailsPage() {
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
 
-        console.log("data: ", data.startDate);
-        console.log("data: ", data.startDate);
-
         // Convert to Date objects safely
         data.startDate = new Date(data.startDate);
         data.endDate = new Date(data.endDate);
-
-        console.log("Start date: ", startDate);
-        console.log("End date: ", endDate);
-
-        console.log("Formatted start date: ", formatDate(startDate));
-        console.log("Formatted end date: ", formatDate(endDate));
 
         setTrip(data);
       } catch (err) {
@@ -65,7 +56,7 @@ function TripDetailsPage() {
         <>
           <h2>{trip.name}</h2>
           <p>
-            {/* <strong>Dates:</strong> {formatDate(trip.startDate)} to {formatDate(trip.endDate)} */}
+            <strong>Dates:</strong> {formatDate(trip.startDate.toLocaleDateString())} to {formatDate(trip.endDate.toLocaleDateString())}
           </p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
