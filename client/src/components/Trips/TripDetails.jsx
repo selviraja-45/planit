@@ -22,14 +22,21 @@ function TripDetailsPage() {
     }
   }, [user, navigate]);
 
-  const convertToDate = (dateObj) => {
-    if (!dateObj || !dateObj.$date) {
-      return null;  // If there's no valid date object, return null
+  const convertToDate = (dateInput) => {
+    if (!dateInput) return null;
+  
+    if (typeof dateInput === 'string' || typeof dateInput === 'number') {
+      const date = new Date(dateInput);
+      return isNaN(date.getTime()) ? null : date;
     }
   
-    const date = new Date(dateObj.$date);  // MongoDB stores date in $date field
-    return isNaN(date.getTime()) ? null : date;  // If invalid, return null
-  };
+    if (typeof dateInput === 'object' && dateInput.$date) {
+      const date = new Date(dateInput.$date);
+      return isNaN(date.getTime()) ? null : date;
+    }
+  
+    return null; // fallback
+  };  
   
   useEffect(() => {
     const fetchTrip = async () => {
@@ -37,7 +44,9 @@ function TripDetailsPage() {
         setError('');
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
-        
+
+        console.log("Data: ", data);
+
         // Convert startDate and endDate to valid Date objects
         if (data.startDate) {
           data.startDate = convertToDate(data.startDate);
@@ -47,8 +56,11 @@ function TripDetailsPage() {
           data.endDate = convertToDate(data.endDate);
         }
   
-        console.log("startDate:", data.startDate);  // Ensure startDate is a Date object
-        console.log("endDate:", data.endDate);  // Ensure endDate is a Date object
+        console.log("Raw startDate:", data.startDate);
+        console.log("Raw endDate:", data.endDate);
+        
+        console.log("Converted startDate:", convertToDate(data.startDate));
+        console.log("Converted endDate:", convertToDate(data.endDate));
   
         setTrip(data);
       } catch (err) {
