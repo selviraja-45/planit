@@ -56,7 +56,7 @@ function TripDetailsPage() {
         <>
           <h2>{trip.name}</h2>
           <p>
-            <strong>Dates:</strong> {formatDatetrip.startDate} to {formatDatetrip.endDate}
+            <strong>Dates:</strong> {trip.startDate} to {trip.endDate}
           </p>
           <p><strong>Budget:</strong> ${trip.budget}</p>
           <p><strong>Participants:</strong> {trip.participants?.length} users</p>
