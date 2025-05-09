@@ -27,8 +27,23 @@ function TripDetailsPage() {
         setError('');
         setLoading(true);
         const { data } = await API.get(`/trips/${tripId}`);
-        data.startDate = new Date(data.startDate);
-        data.endDate = new Date(data.endDate);
+
+        console.log("Data: ", data);
+        
+  
+        // Check if startDate and endDate are valid before converting to Date objects
+        if (Date.parse(data.startDate)) {
+          data.startDate = new Date(data.startDate);
+        } else {
+          throw new Error('Invalid start date');
+        }
+  
+        if (Date.parse(data.endDate)) {
+          data.endDate = new Date(data.endDate);
+        } else {
+          throw new Error('Invalid end date');
+        }
+  
         setTrip(data);
       } catch (err) {
         console.error('Trip fetch failed:', err);
@@ -37,9 +52,10 @@ function TripDetailsPage() {
         setLoading(false);
       }
     };
-
+  
     fetchTrip();
   }, [tripId]);
+  
 
   return (
     <Container className="mt-4">
